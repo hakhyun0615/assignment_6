@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 from langchain_community.document_loaders import UnstructuredFileLoader
 from langchain.storage import LocalFileStore
@@ -14,10 +15,28 @@ from langchain.embeddings import CacheBackedEmbeddings
     show_spinner="Retrieving file..."
 )  # only if file is same, it won't run the function again
 def retrieve_file(file, api_key):
-    file_dir = f"./.cache/document_files/{file.name}"
-    embedding_dir = LocalFileStore(f"./.cache/document_embeddings/{file.name}")
-    embeddings = OpenAIEmbeddings(openai_api_key=api_key)
+    # API 키 설정
+    os.environ["OPENAI_API_KEY"] = api_key.strip()
+    
+    # 디렉토리 경로 설정
+    cache_dir = "./.cache"
+    docs_dir = f"{cache_dir}/document_files"
+    embeddings_dir = f"{cache_dir}/document_embeddings/{file.name}"
+    file_dir = f"{docs_dir}/{file.name}"
+    
+    # 필요한 디렉토리들 생성
+    os.makedirs(docs_dir, exist_ok=True)
+    os.makedirs(embeddings_dir, exist_ok=True)
+    
+    embedding_dir = LocalFileStore(embeddings_dir)
+    
+    # API 키를 명시적으로 전달
+    embeddings = OpenAIEmbeddings(
+        openai_api_key=api_key.strip(),
+        model="text-embedding-ada-002"  # 모델 명시
+    )
 
+    # 파일 내용 읽기 및 저장
     file_content = file.read()
     with open(file_dir, "wb") as f:
         f.write(file_content)
