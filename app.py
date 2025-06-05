@@ -94,7 +94,7 @@ with st.sidebar:
 
     st.markdown("---")
     st.markdown("### 📚 소스 코드")
-    st.markdown("[GitHub Repository](https://github.com/your-username/your-repo)")
+    st.markdown("[GitHub Repository](https://github.com/hakhyun0615/assignment_6)")
     st.markdown("---")
 
 stuff_prompt = ChatPromptTemplate.from_messages(
