@@ -36,7 +36,6 @@ def retrieve_file(file, api_key):
     retriever = vectorstore.as_retriever()
     return retriever
 
-
 def save_message(message, role):
     st.session_state["messages"].append(
         {"message": message, "role": role}
